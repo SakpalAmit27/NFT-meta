@@ -21,15 +21,19 @@ contract NFTSTORE is ERC721URIStorage{
 
     mapping (uint256 => NFTListing) private tokenIdListing;
 
-    modifier onlyOwner{
+    modifier onlyOwner {
         require(msg.sender == marketplaceOwner,"Only owner can call this function");
+        
 
     }
 
     constructor()ERC721("MetaVault","NFTS"){
         marketplaceOwner = payable(msg.sender); 
     }
-    
+
+    function updateListingFeePercent(uint256 _listingFeePercent) public onlyOwner(){
+        listingFeePercent = _listingFeePercent;
+    }
     
 }
 
