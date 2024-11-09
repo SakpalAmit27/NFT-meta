@@ -42,6 +42,29 @@ contract NFTSTORE is ERC721URIStorage{
     function getCurrentTokenId() public view returns(uint256){
         return currentTokenId;
     }
+
+    function getNFTlisting(uint256 _tokenId) public view returns(NFTListing memory){
+        return tokenIdToListing[_tokenId];
+    }
+
+    function createToken(string memory _tokenURIs,uint256 _price) public returns(uint256){
+        require(_price > 0,"Price must be greater than zero");
+
+        currentTokenId ++; 
+        uint256 newTokenId = currentTokenId;
+        _safeMint(msg.sender, newTokenId);
+        _setTokenURI(newTokenId, _tokenURI);
+
+        _createNFTListing(newTokenId,_price);
+        
+        return newTokenId;
+
+    } 
+    
+
+    
+
+    
     
 }
 
