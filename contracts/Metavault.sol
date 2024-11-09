@@ -31,8 +31,16 @@ contract NFTSTORE is ERC721URIStorage{
         marketplaceOwner = payable(msg.sender); 
     }
 
-    function updateListingFeePercent(uint256 _listingFeePercent) public onlyOwner(){
+    function updateListingFeePercent(uint256 _listingFeePercent) public onlyOwner{
         listingFeePercent = _listingFeePercent;
+    }
+
+    function getListingFeePercent() public view returns(uint256){
+        return listingFeePercent;
+    }
+    
+    function getCurrentTokenId() public view returns(uint256){
+        return currentTokenId;
     }
     
 }
