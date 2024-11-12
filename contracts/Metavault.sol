@@ -1,4 +1,4 @@
-=// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.27;
 
 // Importing OpenZeppelin's standard ERC721 contract with URI storage extension
