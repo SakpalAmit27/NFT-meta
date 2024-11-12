@@ -89,7 +89,7 @@ describe("Retrieving NFTs", function () {
   });
 
   it("Should retrieve my NFTs", async function () {
-    const myNFTs = await NFTSTORE.getMyNFts();
+    const myNFTs = await NFTSTORE.getMyNFTs();
     expect(myNFTs.length).to.equal(2);
   });
 });

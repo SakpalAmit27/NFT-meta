@@ -5,16 +5,12 @@ pragma solidity ^0.8.27;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
-// Define the contract, inheriting ERC721URIStorage functionality
-contract NFTMarketplace is ERC721URIStorage {
-    
-    // State variables for marketplace setup
-    address payable public marketplaceOwner;     // Marketplace owner's address
-    uint256 public listingFeePercent = 20;       // Default listing fee percentage
-    uint256 private currentTokenId;              // Tracks token ID count
-    uint256 private totalItemsSold;              // Tracks total NFTs sold
+contract NFTSTORE is ERC721URIStorage {
+    address payable public marketplaceOwner;
+    uint256 public listingFeePercent = 20;
+    uint256 private currentTokenId;
+    uint256 private totalItemsSold;
 
-    // Struct for listing each NFT item with details
     struct NFTListing {
         uint256 tokenId;
         address payable owner;
@@ -22,129 +18,103 @@ contract NFTMarketplace is ERC721URIStorage {
         uint256 price;
     }
 
-    // Mapping to store each NFT listing by its unique token ID
-    mapping(uint256 => NFTListing) private tokenIdListing;
+    mapping (uint256 => NFTListing) private tokenIdToListing;
 
-    // Modifier to restrict certain functions to the marketplace owner
     modifier onlyOwner {
         require(msg.sender == marketplaceOwner, "Only owner can call this function");
         _;
     }
 
-    // Constructor: Initializes contract with owner and sets NFT name and symbol
-    constructor() ERC721("MetaVault", "NFTS") {
-        marketplaceOwner = payable(msg.sender); 
+    constructor() ERC721("NFTSTORE", "NFTS"){
+        marketplaceOwner = payable(msg.sender);
     }
 
-    // Allows the marketplace owner to update the listing fee percentage
-    function updateListingFeePercent(uint256 updatedListingFeePercent) public onlyOwner {
-        listingFeePercent = updatedListingFeePercent;
+    function updateListingFeePercent(uint256 _listingFeePercent) public onlyOwner{
+        listingFeePercent = _listingFeePercent;
     }
 
-    // View function to retrieve the listing fee percentage
     function getListingFeePercent() public view returns (uint256) {
         return listingFeePercent;
     }
-    
-    // View function to get the current token ID
-    function getCurrentTokenId() public view returns (uint256) {
+
+    function getCurrentTokenId() public view returns(uint256) {
         return currentTokenId;
     }
 
-    // Retrieves the NFT listing details for a given token ID
-    function getNFTListing(uint256 _tokenId) public view returns (NFTListing memory) {
-        return tokenIdListing[_tokenId];
+    function getNFTListing(uint256 _tokenId) public view returns(NFTListing memory){
+        return tokenIdToListing[_tokenId];
     }
 
-    // Function to create (mint) a new NFT with URI and set price for listing
-    function createToken(string memory _tokenURI, uint256 _price) public returns (uint256) {
+    function createToken(string memory _tokenURI, uint256 _price) public returns(uint256){
         require(_price > 0, "Price must be greater than zero");
 
-        // Increment token ID and assign to newTokenId
         currentTokenId++;
         uint256 newTokenId = currentTokenId;
-
-        // Mint new NFT and set URI
         _safeMint(msg.sender, newTokenId);
         _setTokenURI(newTokenId, _tokenURI);
 
-        // Create NFT listing for sale
         _createNFTListing(newTokenId, _price);
-        
+
         return newTokenId;
     }
 
-    // Private function to set up a new NFT listing in the marketplace
-    function _createNFTListing(uint256 _tokenId, uint256 _price) private {
-        tokenIdListing[_tokenId] = NFTListing({
+    function _createNFTListing(uint256 _tokenId, uint256 _price) private{
+        tokenIdToListing[_tokenId] = NFTListing({
             tokenId: _tokenId,
-            owner: payable(address(0)),    // Initially no owner in marketplace
-            seller: payable(msg.sender),   // Seller is the creator
+            owner: payable(msg.sender),
+            seller: payable(msg.sender),
             price: _price
         });
     }
 
-    // Function to execute a sale for a given token ID, transferring ownership
-    function executeSale(uint256 tokenId) public payable {
-        NFTListing storage listing = tokenIdListing[tokenId];  // Retrieve listing
+    function executeSale(uint256 tokenId) public payable{
+        NFTListing storage listing = tokenIdToListing[tokenId];
         uint256 price = listing.price;
         address payable seller = listing.seller;
 
-        // Check if buyer has sent the required price
         require(msg.value == price, "Please submit the asking price to complete the purchase");
 
-        // Update listing owner to buyer
-        listing.owner = payable(msg.sender);
-
-        // Increment sold items count
+        listing.seller = payable(msg.sender);
         totalItemsSold++;
 
-        // Transfer NFT ownership from seller to buyer
-        _transfer(seller, msg.sender, tokenId);
+        _transfer(listing.owner, msg.sender, tokenId);
 
-        // Calculate and distribute listing fee
         uint256 listingFee = (price * listingFeePercent) / 100;
         marketplaceOwner.transfer(listingFee);
-        seller.transfer(msg.value - listingFee);  // Seller gets the remaining amount
+        seller.transfer(msg.value - listingFee);
     }
 
-    // Function to retrieve all NFTs listed on the marketplace
-    function getAllListedNFTs() public view returns (NFTListing[] memory) {
+    function getAllListedNFTs() public view returns (NFTListing[] memory){
         uint256 totalNFTCount = currentTokenId;
         NFTListing[] memory listedNFTs = new NFTListing[](totalNFTCount);
         uint256 currentIndex = 0;
 
-        // Loop through all token IDs to retrieve each listing
-        for (uint256 i = 0; i < totalNFTCount; i++) {
+        for(uint256 i = 0; i < totalNFTCount; i++){
             uint256 tokenId = i + 1;
-            NFTListing storage listing = tokenIdListing[tokenId];
+            NFTListing storage listing = tokenIdToListing[tokenId];
             listedNFTs[currentIndex] = listing;
-            currentIndex++;
+            currentIndex += 1;
         }
 
         return listedNFTs;
     }
 
-    // Function to get all NFTs owned by the caller (user)
-    function getMyNFTs() public view returns (NFTListing[] memory) {
+    function getMyNFTs() public view returns(NFTListing[] memory) {
         uint256 totalNFTCount = currentTokenId;
         uint256 myNFTCount = 0;
         uint256 currentIndex = 0;
 
-        // Count the NFTs owned by the caller
-        for (uint256 i = 0; i < totalNFTCount; i++) {
-            if (tokenIdListing[i + 1].owner == msg.sender || tokenIdListing[i + 1].seller == msg.sender) {
+        for(uint256 i = 0; i < totalNFTCount; i++){
+            if(tokenIdToListing[i+1].owner == msg.sender || tokenIdToListing[i+1].seller == msg.sender){
                 myNFTCount++;
             }
         }
 
-        // Create array for the caller's NFTs
         NFTListing[] memory myNFTs = new NFTListing[](myNFTCount);
-
-        // Populate array with the caller's NFTs
-        for (uint256 i = 0; i < totalNFTCount; i++) {
-            if (tokenIdListing[i + 1].owner == msg.sender || tokenIdListing[i + 1].seller == msg.sender) {
-                NFTListing storage listing = tokenIdListing[i + 1];
+        for(uint256 i = 0; i < totalNFTCount; i++){
+            if(tokenIdToListing[i+1].owner == msg.sender || tokenIdToListing[i+1].seller == msg.sender){
+                uint256 tokenId = i + 1;
+                NFTListing storage listing = tokenIdToListing[tokenId];
                 myNFTs[currentIndex] = listing;
                 currentIndex++;
             }
