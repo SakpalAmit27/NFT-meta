@@ -13,6 +13,9 @@ module.exports = {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontFamily: {
+        custom: ['customfont'], // 'custom' is the name you'll use in Tailwind
+      },
     },
   },
   darkMode: "class",
