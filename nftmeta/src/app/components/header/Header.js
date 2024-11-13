@@ -56,8 +56,8 @@ export default function App() {
 
   const menuItems = [
     "Profile",
-    "Sellings", 
-    "Auctioned Listed"
+    "MarketPlace", 
+    "Listed NFTS"
   ];
 
   return (
@@ -75,18 +75,18 @@ export default function App() {
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
-          <Link color="foreground" href="#">
-            NFT listing
+          <Link color="foreground" href="/marketplace">
+           Marketplace
           </Link>
         </NavbarItem>
         <NavbarItem isActive>
-          <Link href="#" aria-current="page">
-            Sellings
+          <Link href="/sellNFT" aria-current="page">
+            Listed NFTS
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="#">
-            Create
+          <Link color="foreground" href="/profile">
+            Profile
           </Link>
         </NavbarItem>
       </NavbarContent>
