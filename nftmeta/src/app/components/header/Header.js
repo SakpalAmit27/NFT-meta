@@ -17,6 +17,22 @@ export default function App() {
     setSigner 
   } = useContext(WalletContext)
 
+  // function to connect to wallet 
+
+  const connectWallet = async() => {
+    // if no etherium installed as extension in browser or windows // 
+    if(!window.etherium){
+      throw new Error("Metamask is not installed")
+    }
+
+    try{
+      // need ether js library here // 
+      const provider = 
+    }catch(error){
+      console.error("connection error ",error)
+    }
+  }
+
   
 
   const menuItems = [
