@@ -44,6 +44,11 @@ export default function App() {
       const chainID = network.chainId; 
       const sepoliaNetworkId = '11155111'
 
+      if(chainID.toString !== sepoliaNetworkId){
+        alert("Please switch your MetaMask to sepolia network");
+        return;
+      }
+
 
 
       
