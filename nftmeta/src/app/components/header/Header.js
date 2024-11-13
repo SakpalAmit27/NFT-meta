@@ -48,19 +48,11 @@ export default function App() {
         alert("Please switch your MetaMask to sepolia network");
         return;
       }
-
-
-
-      
-
-
-
     }catch(error){
       console.error("connection error ",error)
     }
   }
 
-  
 
   const menuItems = [
     "Profile",
