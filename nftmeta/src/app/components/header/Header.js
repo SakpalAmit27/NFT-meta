@@ -31,6 +31,21 @@ export default function App() {
       const provider = new BrowserProvider(window.etherium); 
       const signer = await provider.getSigner();
       setSigner(signer);
+      // getting the accounts 
+      const accounts = await provider.send("eth_requestAccounts",[]);
+      // after getting the account the user is connected // so == true // 
+      setIsConnected(true); 
+      // taking the account from the first index // 
+      setUserAddress(accounts[0]);
+
+      // checking the network  eg : sepolia // 
+
+      const network = await provider.getNetwork(); 
+      const chainID = network.chainId; 
+      const sepoliaNetworkId = '11155111'
+
+
+
       
 
 
