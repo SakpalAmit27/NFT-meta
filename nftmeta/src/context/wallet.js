@@ -10,7 +10,18 @@ export const WalletContext = createContext({children}) =>{
 
 
     return(
-        <WalletContext.Provider>
+        <WalletContext.Provider
+        
+        value={{
+            isConnected,
+            setIsConnected, 
+            userAddress, 
+            setUserAddress, 
+            signer,
+            setSigner 
+        }}
+        
+        >
 
         </WalletContext.Provider>
     )
