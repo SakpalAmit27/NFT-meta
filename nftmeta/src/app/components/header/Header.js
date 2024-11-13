@@ -1,11 +1,23 @@
 "use client"
 
-import React,{useState}from "react";
+import React,{useContext, useState}from "react";
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Link, Button} from "@nextui-org/react";
+import { WalletContext } from "@/context/wallet";
 
 
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const {
+    isConnected,
+    setIsConnected, 
+    userAddress, 
+    setUserAddress, 
+    signer,
+    setSigner 
+  } = useContext(WalletContext)
+
+  
 
   const menuItems = [
     "Profile",
