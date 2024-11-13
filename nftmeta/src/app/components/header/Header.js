@@ -3,6 +3,7 @@
 import React,{useContext, useState}from "react";
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Link, Button} from "@nextui-org/react";
 import { WalletContext } from "@/context/wallet";
+import { BrowserProvider } from "ethers";
 
 
 export default function App() {
@@ -27,7 +28,13 @@ export default function App() {
 
     try{
       // need ether js library here // 
-      const provider = 
+      const provider = new BrowserProvider(window.etherium); 
+      const signer = await provider.getSigner();
+      setSigner(signer);
+      
+
+
+
     }catch(error){
       console.error("connection error ",error)
     }
