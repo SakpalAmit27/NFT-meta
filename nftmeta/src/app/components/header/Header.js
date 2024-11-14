@@ -1,7 +1,17 @@
 "use client";
 
 import React, { useContext, useState } from "react";
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Link, Button } from "@nextui-org/react";
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  NavbarMenuToggle,
+  NavbarMenu,
+  NavbarMenuItem,
+  Link,
+  Button
+} from "@nextui-org/react";
 import { WalletContext } from "@/context/wallet";
 import { BrowserProvider } from "ethers";
 
@@ -10,30 +20,29 @@ export default function App() {
 
   const {
     isConnected,
-    setIsConnected, 
-    userAddress, 
-    setUserAddress, 
+    setIsConnected,
+    userAddress,
+    setUserAddress,
     signer,
-    setSigner 
+    setSigner
   } = useContext(WalletContext);
 
-  // function to connect to wallet
   const connectWallet = async () => {
     if (!window.ethereum) {
       throw new Error("MetaMask is not installed");
     }
 
     try {
-      const provider = new BrowserProvider(window.ethereum); 
+      const provider = new BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       setSigner(signer);
-      
+
       const accounts = await provider.send("eth_requestAccounts", []);
-      setIsConnected(true); 
+      setIsConnected(true);
       setUserAddress(accounts[0]);
 
-      const network = await provider.getNetwork(); 
-      const chainID = network.chainId; 
+      const network = await provider.getNetwork();
+      const chainID = network.chainId;
       const sepoliaNetworkId = '11155111';
 
       if (chainID.toString() !== sepoliaNetworkId) {
@@ -45,11 +54,7 @@ export default function App() {
     }
   };
 
-  const menuItems = [
-    "Profile",
-    "MarketPlace", 
-    "Listed NFTs"
-  ];
+  const menuItems = ["Profile", "MarketPlace", "Listed NFTs"];
 
   return (
     <Navbar onMenuOpenChange={setIsMenuOpen}>
@@ -59,36 +64,63 @@ export default function App() {
           className="sm:hidden"
         />
         <NavbarBrand className="lg:relative lg:absolute lg:left-0">
-          <p className="font-nftvault text-2xl mx-auto font-medium md:text-4xl">NftVault</p>
+          <p className="font-nftvault text-2xl mx-auto font-medium md:text-4xl">
+            NftVault
+          </p>
         </NavbarBrand>
       </NavbarContent>
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
-          <Link color="foreground" href="/marketplace" className="font-mono text-xl font-bold">
+          <Link
+            color="foreground"
+            href="/marketplace"
+            className="font-mono text-xl font-bold"
+          >
             Marketplace
           </Link>
         </NavbarItem>
         <NavbarItem isActive>
-          <Link href="/sellNFT" aria-current="page" className="font-nftvault text-xl font-light text-red-700">
+          <Link
+            href="/sellNFT"
+            aria-current="page"
+            className="font-nftvault text-xl font-light text-red-700"
+          >
             Listed NFTs
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="/profile" className="font-mono text-xl font-bold">
+          <Link
+            color="foreground"
+            href="/profile"
+            className="font-mono text-xl font-bold"
+          >
             Profile
           </Link>
         </NavbarItem>
       </NavbarContent>
 
       <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
+        {/* <NavbarItem className="hidden lg:flex">
           <Link href="#">Sign Up</Link>
-        </NavbarItem>
+        </NavbarItem> */}
         <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat" onClick={connectWallet} className="connect-wallet-btn">
-            Connect to MetaMask
-          </Button>
+          {/* Conditional rendering based on isConnected */}
+          {isConnected && userAddress ? (
+            <span className="text-sm font-mono text-gray-700 font-bold px-3  py-2 border bg-green-400 border-gray-700 rounded-lg">
+              {`${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`}
+            </span>
+          ) : (
+            <Button
+              as={Link}
+              color="primary"
+              href="#"
+              variant="flat"
+              onClick={connectWallet}
+            >
+              Connect to MetaMask
+            </Button>
+          )}
         </NavbarItem>
       </NavbarContent>
 
@@ -96,7 +128,13 @@ export default function App() {
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item}-${index}`}>
             <Link
-              color={index === 2 ? "primary" : index === menuItems.length - 1 ? "danger" : "foreground"}
+              color={
+                index === 2
+                  ? "primary"
+                  : index === menuItems.length - 1
+                  ? "danger"
+                  : "foreground"
+              }
               className="w-full"
               href="#"
               size="lg"
