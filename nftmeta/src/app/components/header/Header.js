@@ -1,10 +1,9 @@
-"use client"
+"use client";
 
-import React,{useContext, useState}from "react";
-import {Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Link, Button} from "@nextui-org/react";
+import React, { useContext, useState } from "react";
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Link, Button } from "@nextui-org/react";
 import { WalletContext } from "@/context/wallet";
 import { BrowserProvider } from "ethers";
-
 
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,48 +15,40 @@ export default function App() {
     setUserAddress, 
     signer,
     setSigner 
-  } = useContext(WalletContext)
+  } = useContext(WalletContext);
 
-  // function to connect to wallet 
-
-  const connectWallet = async() => {
-    // if no etherium installed as extension in browser or windows // 
-    if(!window.etherium){
-      throw new Error("Metamask is not installed")
+  // function to connect to wallet
+  const connectWallet = async () => {
+    if (!window.ethereum) {
+      throw new Error("MetaMask is not installed");
     }
 
-    try{
-      // need ether js library here // 
-      const provider = new BrowserProvider(window.etherium); 
+    try {
+      const provider = new BrowserProvider(window.ethereum); 
       const signer = await provider.getSigner();
       setSigner(signer);
-      // getting the accounts 
-      const accounts = await provider.send("eth_requestAccounts",[]);
-      // after getting the account the user is connected // so == true // 
+      
+      const accounts = await provider.send("eth_requestAccounts", []);
       setIsConnected(true); 
-      // taking the account from the first index // 
       setUserAddress(accounts[0]);
-
-      // checking the network  eg : sepolia // 
 
       const network = await provider.getNetwork(); 
       const chainID = network.chainId; 
-      const sepoliaNetworkId = '11155111'
+      const sepoliaNetworkId = '11155111';
 
-      if(chainID.toString !== sepoliaNetworkId){
-        alert("Please switch your MetaMask to sepolia network");
+      if (chainID.toString() !== sepoliaNetworkId) {
+        alert("Please switch your MetaMask to the Sepolia network");
         return;
       }
-    }catch(error){
-      console.error("connection error ",error)
+    } catch (error) {
+      console.error("Connection error", error);
     }
-  }
-
+  };
 
   const menuItems = [
     "Profile",
     "MarketPlace", 
-    "Listed NFTS"
+    "Listed NFTs"
   ];
 
   return (
@@ -67,46 +58,45 @@ export default function App() {
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           className="sm:hidden"
         />
-        <NavbarBrand className="mt-3 lg:relative lg:absolute lg:left-0">
-        
-          <p className=" text-inherit font-custom text-4xl mx-auto font-medium ">BlackmetA.nft</p>
+        <NavbarBrand className="lg:relative lg:absolute lg:left-0">
+          <p className="font-nftvault text-2xl mx-auto font-medium md:text-4xl">NftVault</p>
         </NavbarBrand>
       </NavbarContent>
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
-          <Link color="foreground" href="/marketplace">
-           Marketplace
+          <Link color="foreground" href="/marketplace" className="font-mono text-xl font-bold">
+            Marketplace
           </Link>
         </NavbarItem>
         <NavbarItem isActive>
-          <Link href="/sellNFT" aria-current="page">
-            Listed NFTS
+          <Link href="/sellNFT" aria-current="page" className="font-nftvault text-xl font-light text-red-700">
+            Listed NFTs
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="/profile">
+          <Link color="foreground" href="/profile" className="font-mono text-xl font-bold">
             Profile
           </Link>
         </NavbarItem>
       </NavbarContent>
+
       <NavbarContent justify="end">
         <NavbarItem className="hidden lg:flex">
           <Link href="#">Sign Up</Link>
         </NavbarItem>
         <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
+          <Button as={Link} color="primary" href="#" variant="flat" onClick={connectWallet} className="connect-wallet-btn">
             Connect to MetaMask
           </Button>
         </NavbarItem>
       </NavbarContent>
+
       <NavbarMenu>
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item}-${index}`}>
             <Link
-              color={
-                index === 2 ? "primary" : index === menuItems.length - 1 ? "danger" : "foreground"
-              }
+              color={index === 2 ? "primary" : index === menuItems.length - 1 ? "danger" : "foreground"}
               className="w-full"
               href="#"
               size="lg"

@@ -1,5 +1,3 @@
-// Footer.js
-
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 
 export default function Footer() {
@@ -9,7 +7,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-6 md:space-y-0">
           {/* Logo and Description */}
           <div className="flex flex-col space-y-2">
-            <h2 className="text-3xl font-medium text-black font-custom">NftmetA</h2>
+            <h2 className="text-3xl font-medium font-nftvault">NFtvault</h2>
             <p className="text-gray-400 max-w-xs">
               Discover and trade unique digital assets with confidence and ease on our NFT marketplace.
             </p>
@@ -49,9 +47,9 @@ export default function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="text-center mt-8 text-gray-500 text-sm">
-          &copy; {new Date().getFullYear()}<span className="text-3xl font-medium font-custom">NftmetA</span>. All rights reserved.<br></br>
-          additonal rights reserved by <span className="text-3xl font-medium font-custom">BlackmetA.api by -- </span><span className="font-medium text-3xl">Amit Sakpal</span>
+        <div className="text-center mt-8 text-gray-500 text-m font-semibold">
+          &copy; {new Date().getFullYear()}<span className="text-xl font-medium font-nftvault hover:text-red-500">Nftvault</span>. All rights reserved.<br />
+          Designed & Composed by <span className="text-2xl font-medium text-gray-200 font-custom hover:text-purple-600">BlackmetA</span>
         </div>
       </div>
     </footer>

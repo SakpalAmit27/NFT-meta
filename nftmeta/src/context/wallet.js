@@ -1,30 +1,28 @@
-"use client"
+"use client";
 
-import {createContext, useState } from "react"
+import { createContext, useState } from "react";
 
-export const WalletContext = createContext({children}) =>{
+// Create the context without `{children}` in `createContext`
+export const WalletContext = createContext();
 
-    const [isConnected,setIsConnected] = useState(false); 
-    const [userAddress,setUserAddress] = useState(null);
-    const [signer,setSigner] = useState();
+// Define the WalletProvider component to wrap children
+export function WalletProvider({ children }) {
+  const [isConnected, setIsConnected] = useState(false);
+  const [userAddress, setUserAddress] = useState(null);
+  const [signer, setSigner] = useState();
 
-
-    return(
-        <WalletContext.Provider
-        
-        value={{
-            isConnected,
-            setIsConnected, 
-            userAddress, 
-            setUserAddress, 
-            signer,
-            setSigner 
-        }}
-        
-        >
-
-        </WalletContext.Provider>
-    )
-
-} 
-
+  return (
+    <WalletContext.Provider
+      value={{
+        isConnected,
+        setIsConnected,
+        userAddress,
+        setUserAddress,
+        signer,
+        setSigner,
+      }}
+    >
+      {children}
+    </WalletContext.Provider>
+  );
+}

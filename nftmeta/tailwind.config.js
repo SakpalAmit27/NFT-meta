@@ -15,6 +15,7 @@ module.exports = {
       },
       fontFamily: {
         custom: ['customfont'], // 'custom' is the name you'll use in Tailwind
+        nftvault:['nftvaulti'],
       },
     },
   },
