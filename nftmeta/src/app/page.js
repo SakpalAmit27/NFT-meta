@@ -1,6 +1,25 @@
+"use client"
+
 import { Button } from "@nextui-org/react";
+import { useContext } from "react";
+import { WalletContext } from "@/context/wallet";
+import { useRouter } from "next/navigation"; // Updated import
+
 
 export default function Home() {
+  const { isConnected } = useContext(WalletContext);
+  const router = useRouter();
+
+  const handleButtonClick = () => {
+    if (isConnected) {
+      // Redirect to dashboard or marketplace
+      router.push("/marketplace"); // Example route
+    } else {
+      // Trigger MetaMask connection
+      alert("Please connect your MetaMask wallet first.");
+    }
+  };
+
   return (
     <div className="bg-gray-100 min-h-screen">
       {/* Hero Section */}
@@ -40,9 +59,18 @@ export default function Home() {
       {/* CTA Section */}
       <section className="bg-gray-900 text-white py-16">
         <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-6">Join <span className="text-3xl font-medium font-nftvault">NFTVAULT</span> today</h2>
+          <h2 className="text-4xl font-bold mb-6">
+            Join <span className="text-3xl font-medium font-nftvault">NFTVAULT</span> today
+          </h2>
           <p className="text-lg mb-6">Start trading digital assets in a vibrant, growing community.</p>
-          <Button color="secondary" size="lg">Sign Up Now</Button>
+          <Button 
+            color="secondary" 
+            size="lg" 
+            onClick={handleButtonClick}
+            className="font-bold border-2 border-indigo-500 px-6 py-2 rounded-lg"
+          >
+            {isConnected ? "View Your Dashboard" : "Go to Marketplace"}
+          </Button>
         </div>
       </section>
     </div>
