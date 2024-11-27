@@ -54,6 +54,27 @@ export const uploadFileToIPFS = async(data) => {
     data.append("pinataoptions",pinataOptions); 
 
     try{
-        const res = await axios.post('https://api.pinata.cloud/pinning/pinJSONToIPFS')
+        const res = await axios.post('https://api.pinata.cloud/pinning/pinFileToIPFS',data,{
+            maxBodyLength:"Infinity",
+            headers:{
+                "Content-Type": `multipart/form-data; boundary=${data,_boundary}`,
+                Authorization:`Bearer ${jwt}`
+            }
+        })
+
+        return{
+            success:true,
+            pinataURL:"https://gateway.pinata.cloud/ipfs/" + res.data.IpfsHash,
+
+        }
+        
     }
-}
+    catch(error){
+        console.log(error); 
+
+        return{
+            success:false, 
+            message:error.message
+        }
+    }
+} 
